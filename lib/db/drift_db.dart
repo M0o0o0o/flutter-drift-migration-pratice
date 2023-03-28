@@ -13,19 +13,31 @@ class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
-      onCreate: (Migrator m) async {},
-      onUpgrade: (Migrator m, int from, int to) async {
-        print('upgrade');
-        if (from < 2) {
-          m.addColumn(todos, todos.createdAt);
-        }
-      },
-    );
+        onCreate: (Migrator m) async {},
+        onUpgrade: (Migrator m, int from, int to) async {
+          if (from < 2) {
+            m.addColumn(todos, todos.orders);
+          }
+          if (from < 3) {
+            m.addColumn(todos, todos.orders2);
+          }
+          if (from < 4) {
+            m.addColumn(todos, todos.orders3);
+          }
+        },
+        beforeOpen: (details) async {
+          // final m = createMigrator(); // changed to this
+          // for (final table in allTables) {
+          //   await m.deleteTable(table.actualTableName);
+          //   await m.createTable(table);
+          // }
+          // update(todos).write(TodosCompanion(orders: Value(0)));
+        });
   }
 }
 

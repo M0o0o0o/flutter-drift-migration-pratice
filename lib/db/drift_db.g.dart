@@ -37,15 +37,26 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
   late final GeneratedColumn<int> category = GeneratedColumn<int>(
       'category', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _ordersMeta = const VerificationMeta('orders');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  late final GeneratedColumn<int> orders = GeneratedColumn<int>(
+      'orders', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _orders2Meta =
+      const VerificationMeta('orders2');
+  @override
+  late final GeneratedColumn<int> orders2 = GeneratedColumn<int>(
+      'orders2', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _orders3Meta =
+      const VerificationMeta('orders3');
+  @override
+  late final GeneratedColumn<int> orders3 = GeneratedColumn<int>(
+      'orders3', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, title, content, category, createdAt];
+      [id, title, content, category, orders, orders2, orders3];
   @override
   String get aliasedName => _alias ?? 'todos';
   @override
@@ -74,9 +85,17 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
       context.handle(_categoryMeta,
           category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
     }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    if (data.containsKey('orders')) {
+      context.handle(_ordersMeta,
+          orders.isAcceptableOrUnknown(data['orders']!, _ordersMeta));
+    }
+    if (data.containsKey('orders2')) {
+      context.handle(_orders2Meta,
+          orders2.isAcceptableOrUnknown(data['orders2']!, _orders2Meta));
+    }
+    if (data.containsKey('orders3')) {
+      context.handle(_orders3Meta,
+          orders3.isAcceptableOrUnknown(data['orders3']!, _orders3Meta));
     }
     return context;
   }
@@ -95,8 +114,12 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
           .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
       category: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}category']),
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
+      orders: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}orders']),
+      orders2: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}orders2']),
+      orders3: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}orders3']),
     );
   }
 
@@ -111,13 +134,17 @@ class Todo extends DataClass implements Insertable<Todo> {
   final String title;
   final String content;
   final int? category;
-  final DateTime? createdAt;
+  final int? orders;
+  final int? orders2;
+  final int? orders3;
   const Todo(
       {required this.id,
       required this.title,
       required this.content,
       this.category,
-      this.createdAt});
+      this.orders,
+      this.orders2,
+      this.orders3});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -127,8 +154,14 @@ class Todo extends DataClass implements Insertable<Todo> {
     if (!nullToAbsent || category != null) {
       map['category'] = Variable<int>(category);
     }
-    if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || orders != null) {
+      map['orders'] = Variable<int>(orders);
+    }
+    if (!nullToAbsent || orders2 != null) {
+      map['orders2'] = Variable<int>(orders2);
+    }
+    if (!nullToAbsent || orders3 != null) {
+      map['orders3'] = Variable<int>(orders3);
     }
     return map;
   }
@@ -141,9 +174,14 @@ class Todo extends DataClass implements Insertable<Todo> {
       category: category == null && nullToAbsent
           ? const Value.absent()
           : Value(category),
-      createdAt: createdAt == null && nullToAbsent
+      orders:
+          orders == null && nullToAbsent ? const Value.absent() : Value(orders),
+      orders2: orders2 == null && nullToAbsent
           ? const Value.absent()
-          : Value(createdAt),
+          : Value(orders2),
+      orders3: orders3 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(orders3),
     );
   }
 
@@ -155,7 +193,9 @@ class Todo extends DataClass implements Insertable<Todo> {
       title: serializer.fromJson<String>(json['title']),
       content: serializer.fromJson<String>(json['content']),
       category: serializer.fromJson<int?>(json['category']),
-      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      orders: serializer.fromJson<int?>(json['orders']),
+      orders2: serializer.fromJson<int?>(json['orders2']),
+      orders3: serializer.fromJson<int?>(json['orders3']),
     );
   }
   @override
@@ -166,7 +206,9 @@ class Todo extends DataClass implements Insertable<Todo> {
       'title': serializer.toJson<String>(title),
       'content': serializer.toJson<String>(content),
       'category': serializer.toJson<int?>(category),
-      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'orders': serializer.toJson<int?>(orders),
+      'orders2': serializer.toJson<int?>(orders2),
+      'orders3': serializer.toJson<int?>(orders3),
     };
   }
 
@@ -175,13 +217,17 @@ class Todo extends DataClass implements Insertable<Todo> {
           String? title,
           String? content,
           Value<int?> category = const Value.absent(),
-          Value<DateTime?> createdAt = const Value.absent()}) =>
+          Value<int?> orders = const Value.absent(),
+          Value<int?> orders2 = const Value.absent(),
+          Value<int?> orders3 = const Value.absent()}) =>
       Todo(
         id: id ?? this.id,
         title: title ?? this.title,
         content: content ?? this.content,
         category: category.present ? category.value : this.category,
-        createdAt: createdAt.present ? createdAt.value : this.createdAt,
+        orders: orders.present ? orders.value : this.orders,
+        orders2: orders2.present ? orders2.value : this.orders2,
+        orders3: orders3.present ? orders3.value : this.orders3,
       );
   @override
   String toString() {
@@ -190,13 +236,16 @@ class Todo extends DataClass implements Insertable<Todo> {
           ..write('title: $title, ')
           ..write('content: $content, ')
           ..write('category: $category, ')
-          ..write('createdAt: $createdAt')
+          ..write('orders: $orders, ')
+          ..write('orders2: $orders2, ')
+          ..write('orders3: $orders3')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, content, category, createdAt);
+  int get hashCode =>
+      Object.hash(id, title, content, category, orders, orders2, orders3);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -205,7 +254,9 @@ class Todo extends DataClass implements Insertable<Todo> {
           other.title == this.title &&
           other.content == this.content &&
           other.category == this.category &&
-          other.createdAt == this.createdAt);
+          other.orders == this.orders &&
+          other.orders2 == this.orders2 &&
+          other.orders3 == this.orders3);
 }
 
 class TodosCompanion extends UpdateCompanion<Todo> {
@@ -213,20 +264,26 @@ class TodosCompanion extends UpdateCompanion<Todo> {
   final Value<String> title;
   final Value<String> content;
   final Value<int?> category;
-  final Value<DateTime?> createdAt;
+  final Value<int?> orders;
+  final Value<int?> orders2;
+  final Value<int?> orders3;
   const TodosCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.content = const Value.absent(),
     this.category = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.orders = const Value.absent(),
+    this.orders2 = const Value.absent(),
+    this.orders3 = const Value.absent(),
   });
   TodosCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     required String content,
     this.category = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.orders = const Value.absent(),
+    this.orders2 = const Value.absent(),
+    this.orders3 = const Value.absent(),
   })  : title = Value(title),
         content = Value(content);
   static Insertable<Todo> custom({
@@ -234,14 +291,18 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     Expression<String>? title,
     Expression<String>? content,
     Expression<int>? category,
-    Expression<DateTime>? createdAt,
+    Expression<int>? orders,
+    Expression<int>? orders2,
+    Expression<int>? orders3,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (content != null) 'body': content,
       if (category != null) 'category': category,
-      if (createdAt != null) 'created_at': createdAt,
+      if (orders != null) 'orders': orders,
+      if (orders2 != null) 'orders2': orders2,
+      if (orders3 != null) 'orders3': orders3,
     });
   }
 
@@ -250,13 +311,17 @@ class TodosCompanion extends UpdateCompanion<Todo> {
       Value<String>? title,
       Value<String>? content,
       Value<int?>? category,
-      Value<DateTime?>? createdAt}) {
+      Value<int?>? orders,
+      Value<int?>? orders2,
+      Value<int?>? orders3}) {
     return TodosCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
       category: category ?? this.category,
-      createdAt: createdAt ?? this.createdAt,
+      orders: orders ?? this.orders,
+      orders2: orders2 ?? this.orders2,
+      orders3: orders3 ?? this.orders3,
     );
   }
 
@@ -275,8 +340,14 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     if (category.present) {
       map['category'] = Variable<int>(category.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (orders.present) {
+      map['orders'] = Variable<int>(orders.value);
+    }
+    if (orders2.present) {
+      map['orders2'] = Variable<int>(orders2.value);
+    }
+    if (orders3.present) {
+      map['orders3'] = Variable<int>(orders3.value);
     }
     return map;
   }
@@ -288,7 +359,9 @@ class TodosCompanion extends UpdateCompanion<Todo> {
           ..write('title: $title, ')
           ..write('content: $content, ')
           ..write('category: $category, ')
-          ..write('createdAt: $createdAt')
+          ..write('orders: $orders, ')
+          ..write('orders2: $orders2, ')
+          ..write('orders3: $orders3')
           ..write(')'))
         .toString();
   }

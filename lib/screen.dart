@@ -18,7 +18,23 @@ class _ScreenState extends ConsumerState<Screen> {
       children: [
         renderAddTodoBtn(),
         const SizedBox(height: 50),
-        Expanded(child: renderTodos(todos)),
+        // Expanded(child: renderTodos(todos)),
+        Container(
+          width: 50,
+          height: 50,
+          child: Row(
+            children: [
+              Container(
+                width: 50 * 0.55,
+                color: Colors.red,
+              ),
+              Container(
+                width: 50 * 0.45,
+                color: Colors.blue,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -42,7 +58,7 @@ class _ScreenState extends ConsumerState<Screen> {
         itemBuilder: (BuildContext context, int i) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Text(
-              'id=${todos[i].id} title=${todos[i].title} content=${todos[i].content} day=${todos[i].createdAt}'),
+              'id=${todos[i].id} title=${todos[i].title} content=${todos[i].content}, orders=${todos[i].orders} orders2=${todos[i].orders2}'),
         ),
       ),
     );

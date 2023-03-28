@@ -29,8 +29,12 @@ class TodoNotifier extends StateNotifier<List<Todo>> {
             category: Value(category),
           ),
         );
-    Todo newTodo =
-        Todo(id: newTodoId, title: title, content: content, category: category);
+    Todo newTodo = Todo(
+        id: newTodoId,
+        title: title,
+        content: content,
+        category: category,
+        orders: 3);
 
     state = [...state, newTodo];
   }
